@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 import os
 import random
 import math
+import time
 
 
 def initialize_pheromones(graph, k):
@@ -310,29 +311,60 @@ if __name__ == "__main__":
             nx.Graph: The graph with nodes and weighted edges.
         """
         graph = nx.Graph()
-        nodes = [1, 2, 3, 4, 5]
+
+        nodes = range(1, 21)
+        graph.add_nodes_from(nodes)
+
         edges = [
             (1, 2, 2),
             (1, 3, 5),
+            (1, 4, 3),
+            (1, 5, 7),
             (2, 3, 3),
-            (2, 4, 4),
+            (2, 6, 6),
             (3, 4, 1),
+            (3, 7, 4),
             (4, 5, 2),
-            (3, 5, 6),
+            (4, 8, 3),
+            (5, 9, 4),
+            (6, 7, 2),
+            (6, 10, 5),
+            (7, 8, 3),
+            (7, 11, 1),
+            (8, 9, 2),
+            (8, 12, 6),
+            (9, 13, 3),
+            (10, 11, 4),
+            (10, 14, 2),
+            (11, 12, 5),
+            (11, 15, 1),
+            (12, 13, 4),
+            (12, 16, 3),
+            (13, 17, 2),
+            (14, 15, 3),
+            (14, 18, 6),
+            (15, 16, 2),
+            (15, 19, 4),
+            (16, 17, 5),
+            (16, 20, 1),
+            (17, 20, 3),
+            (18, 19, 2),
+            (19, 20, 4),
         ]
-        graph.add_nodes_from(nodes)
         graph.add_weighted_edges_from(edges)
+
         return graph
 
     test_graph = create_test_graph()
 
-    num_ants_start = 50
+    num_ants_start = 80
     num_ants_end = 20
-    num_iterations = 30
+    num_iterations = 50
     start_node = 1
-    end_node = 5
+    end_node = 20
     num_threads = 2
 
+    start_time = time.time()
     best_paths, best_path_length = run_ant_colony(
         test_graph,
         num_ants_start,
@@ -342,5 +374,8 @@ if __name__ == "__main__":
         end_node,
         num_threads,
     )
+    ant_time = time.time() - start_time
+
     print("Best paths found:", best_paths)
-    print("Shortest path length::", best_path_length)
+    print("Shortest path length:", best_path_length)
+    print("Time:", ant_time)

@@ -1,5 +1,6 @@
 import networkx as nx
 import random
+import time
 
 
 ALPHA = 1  # Влияние феромонов
@@ -115,7 +116,7 @@ def update_pheromones(pheromones, paths, graph):
     return pheromones
 
 
-def run_ant_colony(graph, num_ants, num_iterations, start_node):
+def run_ant_colony(graph, num_ants, num_iterations, start_node, end_node):
     """
     Runs the ant colony optimization algorithm to find the shortest path in the graph.
 
@@ -124,6 +125,7 @@ def run_ant_colony(graph, num_ants, num_iterations, start_node):
         num_ants (int): The number of ants to use in each iteration.
         num_iterations (int): The number of iterations to perform.
         start_node (int): The starting node for all ants.
+        end_node (int): Target node for all ants.
 
     Returns:
         Tuple[List[Tuple[int]], float]: The best paths found and their length.
@@ -139,7 +141,7 @@ def run_ant_colony(graph, num_ants, num_iterations, start_node):
             unvisited_nodes = set(graph.nodes()) - {start_node}
             current_node = start_node
 
-            while unvisited_nodes:
+            while current_node != end_node:
                 next_node = move_ant(current_node, unvisited_nodes, graph, pheromones)
                 if next_node is None:
                     break
@@ -147,7 +149,8 @@ def run_ant_colony(graph, num_ants, num_iterations, start_node):
                 unvisited_nodes.remove(next_node)
                 current_node = next_node
 
-            all_paths.append(path)
+            if path[-1] == end_node:
+                all_paths.append(path)
 
         pheromones = update_pheromones(pheromones, all_paths, graph)
 
@@ -167,7 +170,7 @@ def run_ant_colony(graph, num_ants, num_iterations, start_node):
 
 if __name__ == "__main__":
 
-    def create_graph():
+    def create_test_graph():
         """
         Creates a predefined graph for testing the ant colony optimization algorithm.
 
@@ -175,27 +178,66 @@ if __name__ == "__main__":
             nx.Graph: The graph with nodes and weighted edges.
         """
         graph = nx.Graph()
-        nodes = [1, 2, 3, 4, 5]
+
+        nodes = range(1, 21)
+        graph.add_nodes_from(nodes)
+
         edges = [
             (1, 2, 2),
             (1, 3, 5),
+            (1, 4, 3),
+            (1, 5, 7),
             (2, 3, 3),
-            (2, 4, 4),
+            (2, 6, 6),
             (3, 4, 1),
+            (3, 7, 4),
             (4, 5, 2),
-            (3, 5, 6),
+            (4, 8, 3),
+            (5, 9, 4),
+            (6, 7, 2),
+            (6, 10, 5),
+            (7, 8, 3),
+            (7, 11, 1),
+            (8, 9, 2),
+            (8, 12, 6),
+            (9, 13, 3),
+            (10, 11, 4),
+            (10, 14, 2),
+            (11, 12, 5),
+            (11, 15, 1),
+            (12, 13, 4),
+            (12, 16, 3),
+            (13, 17, 2),
+            (14, 15, 3),
+            (14, 18, 6),
+            (15, 16, 2),
+            (15, 19, 4),
+            (16, 17, 5),
+            (16, 20, 1),
+            (17, 20, 3),
+            (18, 19, 2),
+            (19, 20, 4),
         ]
-        graph.add_nodes_from(nodes)
         graph.add_weighted_edges_from(edges)
+
         return graph
 
-    graph = create_graph()
-    num_ants = 20
+    graph = create_test_graph()
+    num_ants = 80
     num_iterations = 50
     start_node = 1
+    end_node = 20
 
+    start_time = time.time()
     best_paths, best_path_length = run_ant_colony(
-        graph, num_ants, num_iterations, start_node
+        graph,
+        num_ants,
+        num_iterations,
+        start_node,
+        end_node,
     )
+    ant_time = time.time() - start_time
+
     print("Best paths found:", best_paths)
     print("Shortest path length:", best_path_length)
+    print("Time:", ant_time)
