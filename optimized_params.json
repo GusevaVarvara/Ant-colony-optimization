@@ -1,0 +1,14 @@
+{
+    "base_params": {
+        "alpha_start": 1.4074507907513203,
+        "beta_start": 2.1011231104119883,
+        "min_rate": 0.05377747019838979,
+        "num_ants_start": 13
+    },
+    "extended_params": {
+        "alpha_end": 0.8651819947421806,
+        "beta_end": 2.4001774579160022,
+        "max_rate": 0.5382643379114702,
+        "num_ants_end": 10
+    }
+}
